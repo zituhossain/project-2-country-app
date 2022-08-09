@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
+import Countries from "./components/Countries";
 
 const url = "https://restcountries.com/v3.1/all";
 
@@ -17,7 +18,6 @@ const App = () => {
       setCountries(data);
       setIsLoading(false);
       setError(null);
-      console.log(countries);
     } catch (error) {
       setIsLoading(false);
       setError(error);
@@ -29,7 +29,12 @@ const App = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return <div>App</div>;
+  return <div>
+    <h1>Country App</h1>
+    {isLoading && <h2>Loading...</h2>}
+    {error && <h2>{error.message}</h2>}
+    {countries && <Countries countries={countries} />}
+  </div>;
 };
 
 export default App;
