@@ -10,6 +10,7 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [countries, setCountries] = useState([]);
+  const [filteredCountries, setFilteredCountries] = useState(countries);
 
   const fetchData = async (url) => {
     setIsLoading(true);
@@ -18,6 +19,7 @@ const App = () => {
       const response = await fetch(url);
       const data = await response.json();
       setCountries(data);
+      setFilteredCountries(data);
       setIsLoading(false);
       setError(null);
     } catch (error) {
@@ -27,16 +29,29 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetchData(url)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    fetchData(url);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  return <div>
-    <h1>Country App</h1>
-    {isLoading && <h2>Loading...</h2>}
-    {error && <h2>{error.message}</h2>}
-    {countries && <Countries countries={countries} />}
-  </div>;
+  const handleRemoveCountry = (name) => {
+    const filter = filteredCountries.filter((country)=>
+      country.name.common !== name);
+      setFilteredCountries(filter)
+  };
+
+  return (
+    <div>
+      <h1>Country App</h1>
+      {isLoading && <h2>Loading...</h2>}
+      {error && <h2>{error.message}</h2>}
+      {countries && (
+        <Countries
+          countries={filteredCountries}
+          onRemoveCountry={handleRemoveCountry}
+        />
+      )}
+    </div>
+  );
 };
 
 export default App;
